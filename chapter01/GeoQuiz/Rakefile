@@ -1,0 +1,18 @@
+# -*- coding: utf-8 -*-
+$:.unshift("/Library/RubyMotion/lib")
+require 'motion/project/template/android'
+
+begin
+  require 'bundler'
+  Bundler.require
+rescue LoadError
+end
+
+Motion::Project::App.setup do |app|
+  # Use `rake config' to see complete project settings.
+  app.name = "GeoQuiz"
+  app.package = "net.darinwilson.android.geoquiz"
+  app.main_activity = "QuizActivity"
+  app.theme = "@android:style/Theme.Holo.Light"
+  app.archs << "x86"
+end
