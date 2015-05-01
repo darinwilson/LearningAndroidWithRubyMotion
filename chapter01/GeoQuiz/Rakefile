@@ -14,5 +14,5 @@ Motion::Project::App.setup do |app|
   app.package = "net.darinwilson.android.geoquiz"
   app.main_activity = "QuizActivity"
   app.theme = "@android:style/Theme.Holo.Light"
-  app.archs << "x86"
+  app.development { app.archs << 'x86' } #for genymotion support
 end
