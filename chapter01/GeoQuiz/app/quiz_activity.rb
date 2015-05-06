@@ -14,7 +14,7 @@ class QuizActivity < Android::App::Activity
 
   def onClick(view)
     message_id = (view == true_button ? R::String::Incorrect_toast : R::String::Correct_toast)
-    Toast.makeText(self, message_id, Toast::LENGTH_SHORT).show();
+    Toast.makeText(self, message_id, Toast::LENGTH_SHORT).show()
   end
 
 end
