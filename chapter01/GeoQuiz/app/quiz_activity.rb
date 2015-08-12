@@ -1,4 +1,4 @@
-class QuizActivity < Android::App::Activity
+class QuizActivity < Android::Support::V7::App::AppCompatActivity
   attr_accessor :true_button
   attr_accessor :false_button
 
@@ -17,4 +17,15 @@ class QuizActivity < Android::App::Activity
     Toast.makeText(self, message_id, Toast::LENGTH_SHORT).show()
   end
 
+  def onCreateOptionsMenu(menu)
+    getMenuInflater().inflate(R::Menu::Menu_quiz, menu)
+    true
+  end
+
+  def onOptionsItemSelected(item)
+    if (item.itemId == R::Id::Section_settings)
+      return true
+    end
+    super
+  end
 end

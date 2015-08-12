@@ -11,3 +11,5 @@ nbproject
 .sass-cache
 .idea
 .dat*.*
+vendor/Gradle
+
