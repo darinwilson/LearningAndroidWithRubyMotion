@@ -23,7 +23,7 @@ class QuizActivity < Android::Support::V7::App::AppCompatActivity
   end
 
   def onOptionsItemSelected(item)
-    if (item.itemId == R::Id::Section_settings)
+    if (item.itemId == R::Id::Action_settings)
       return true
     end
     super

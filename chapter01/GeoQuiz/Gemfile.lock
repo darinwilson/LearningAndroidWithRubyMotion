@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    motion-gradle (1.3.0)
+    motion-gradle (1.4.0)
     rake (10.4.2)
 
 PLATFORMS
@@ -10,6 +10,3 @@ PLATFORMS
 DEPENDENCIES
   motion-gradle
   rake
-
-BUNDLED WITH
-   1.10.6
