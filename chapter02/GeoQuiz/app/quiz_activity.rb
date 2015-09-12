@@ -1,10 +1,10 @@
-class QuizActivity < Android::App::Activity
+class QuizActivity < Android::Support::V7::App::AppCompatActivity
   attr_accessor :true_button
   attr_accessor :false_button
   attr_accessor :next_button
   attr_accessor :previous_button
-  attr_accessor :question_view
-  attr_reader :question_bank
+  attr_accessor :question_text_view
+  attr_accessor :question_bank
   attr_accessor :current_index
 
   Toast = Android::Widget::Toast
@@ -14,30 +14,31 @@ class QuizActivity < Android::App::Activity
     setContentView(R::Layout::Activity_quiz)
 
     @question_bank = [
-      TrueFalse.new(R::String::Question_oceans, true),
-      TrueFalse.new(R::String::Question_mideast, false),
-      TrueFalse.new(R::String::Question_africa, false),
-      TrueFalse.new(R::String::Question_americas, true),
-      TrueFalse.new(R::String::Question_asia, true),
+      Question.new(R::String::Question_oceans, true),
+      Question.new(R::String::Question_mideast, false),
+      Question.new(R::String::Question_africa, false),
+      Question.new(R::String::Question_americas, true),
+      Question.new(R::String::Question_asia, true),
     ]
     @current_index = 0
 
-    @question_view = findViewById(R::Id::Question_text_view)
-    @question_view.onClickListener = self
-    update_question
+    @question_text_view = findViewById(R::Id::Question_text_view)
+    # remember that in RubyMotion setText can be written as text=
+    @question_text_view.text = question_bank[current_index].text_res_id
 
     @true_button = findViewById(R::Id::True_button)
     @false_button = findViewById(R::Id::False_button)
-    @true_button.onClickListener = @false_button.onClickListener = self
-
     @next_button = findViewById(R::Id::Next_button)
-    @next_button.onClickListener = self
     @previous_button = findViewById(R::Id::Previous_button)
-    @previous_button.onClickListener = self
+    @true_button.onClickListener =
+      @false_button.onClickListener =
+      @next_button.onClickListener =
+      @previous_button.onClickListener =
+      @question_text_view.onClickListener = self
   end
 
   def onClick(view)
-    if view == next_button || view == previous_button || view == question_view
+    if view == next_button || view == previous_button || view == question_text_view
       self.current_index =
         (view == previous_button ? current_index - 1 : current_index + 1) % question_bank.length
       update_question
@@ -51,12 +52,24 @@ class QuizActivity < Android::App::Activity
         end
       Toast.makeText(self, message_id, Toast::LENGTH_SHORT).show()
     end
+
+  end
+
+  def onCreateOptionsMenu(menu)
+    getMenuInflater().inflate(R::Menu::Menu_quiz, menu)
+    true
+  end
+
+  def onOptionsItemSelected(item)
+    if (item.itemId == R::Id::Action_settings)
+      return true
+    end
+    super
   end
 
   private
 
   def update_question
-    question_view.setText(question_bank[current_index].question)
+    question_text_view.text = question_bank[current_index].text_res_id
   end
-
 end
