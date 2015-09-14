@@ -13,6 +13,9 @@ Motion::Project::App.setup do |app|
   app.name = "GeoQuiz"
   app.package = "net.darinwilson.android.geoquiz"
   app.main_activity = "QuizActivity"
-  app.theme = "@android:style/Theme.Holo.Light"
-  app.development { app.archs << 'x86' } #for genymotion support
+  app.theme = "@style/Theme.AppCompat.Light.DarkActionBar"
+  app.archs = ["x86"] unless ARGV.include?("device") || ARGV.include?("release")
+  app.gradle do
+    dependency "com.android.support:appcompat-v7:22.1.0"
+  end
 end

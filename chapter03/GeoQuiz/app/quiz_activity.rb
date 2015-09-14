@@ -1,44 +1,52 @@
-class QuizActivity < Android::App::Activity
+class QuizActivity < Android::Support::V7::App::AppCompatActivity
   attr_accessor :true_button
   attr_accessor :false_button
   attr_accessor :next_button
-  attr_accessor :question_view
-  attr_reader :question_bank
+  attr_accessor :question_text_view
+  attr_accessor :question_bank
   attr_accessor :current_index
 
   Toast = Android::Widget::Toast
-  KEY_INDEX = "index"
+
+  # a key for storing the current index
+  KEY_INDEX = "current_index"
 
   def onCreate(saved_instance_state)
     super
     setContentView(R::Layout::Activity_quiz)
 
     @question_bank = [
-      TrueFalse.new(R::String::Question_oceans, true),
-      TrueFalse.new(R::String::Question_mideast, false),
-      TrueFalse.new(R::String::Question_africa, false),
-      TrueFalse.new(R::String::Question_americas, true),
-      TrueFalse.new(R::String::Question_asia, true),
+      Question.new(R::String::Question_oceans, true),
+      Question.new(R::String::Question_mideast, false),
+      Question.new(R::String::Question_africa, false),
+      Question.new(R::String::Question_americas, true),
+      Question.new(R::String::Question_asia, true),
     ]
+
     @current_index = 0
     if saved_instance_state
       @current_index = saved_instance_state.getInt(KEY_INDEX, 0)
     end
 
-    @question_view = findViewById(R::Id::Question_text_view)
-    @question_view.onClickListener = self
+    @question_text_view = findViewById(R::Id::Question_text_view)
     update_question
 
     @true_button = findViewById(R::Id::True_button)
     @false_button = findViewById(R::Id::False_button)
-    @true_button.onClickListener = @false_button.onClickListener = self
-
     @next_button = findViewById(R::Id::Next_button)
-    @next_button.onClickListener = self
+    @true_button.onClickListener =
+      @false_button.onClickListener =
+      @next_button.onClickListener = self
+  end
+
+  def onSaveInstanceState(saved_instance_state)
+    super
+    debug "onSaveInstanceState"
+    saved_instance_state.putInt(KEY_INDEX, current_index)
   end
 
   def onClick(view)
-    if view == next_button || view == question_view
+    if view == next_button || view == question_text_view
       self.current_index = (current_index + 1) % question_bank.length
       update_question
     else
@@ -51,12 +59,19 @@ class QuizActivity < Android::App::Activity
         end
       Toast.makeText(self, message_id, Toast::LENGTH_SHORT).show()
     end
+
   end
 
-  def onSaveInstanceState(saved_instance_state)
+  def onCreateOptionsMenu(menu)
+    getMenuInflater().inflate(R::Menu::Menu_quiz, menu)
+    true
+  end
+
+  def onOptionsItemSelected(item)
+    if (item.itemId == R::Id::Action_settings)
+      return true
+    end
     super
-    debug "onSaveInstanceState"
-    saved_instance_state.putInt(KEY_INDEX, current_index)
   end
 
   def onStart
@@ -87,7 +102,7 @@ class QuizActivity < Android::App::Activity
   private
 
   def update_question
-    question_view.setText(question_bank[current_index].question)
+    question_text_view.text = question_bank[current_index].text_res_id
   end
 
   def debug(message)
